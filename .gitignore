@@ -1,0 +1,7 @@
+.venv
+.idea
+bin_dataset
+dataset
+lab_1.py
+lab_2.py
+__init__.py
