@@ -1,44 +1,44 @@
-import os
+# import os
 import _csv
 
-current_path = os.getcwd()  # O(1)
-source_filepath = r"dataset\0002.csv"  # O(1)
-destination_filepath = r"bin_dataset\new_binary_data.csv"
-
-source = os.path.join(current_path, source_filepath)  # O(1)
-destination = os.path.join(current_path, destination_filepath)
-
-
-def dig_items_from_(source_path, destination_path):
-    items = []
-    transactions = []
-    binary_data = []
-
-    with open(source_path, encoding="UTF-8") as source_file:
-        csv_reader = _csv.reader(source_file)  # O(1)
-        for index, transaction in list(csv_reader)[1:]:  # O(n)
-            transactions.append(transaction)
-            for item in transaction.split(", "):  # O(m)
-                if item not in items:
-                    items.append(item)
-
-    for transaction in transactions:
-        encoded_data = []
-        for item in items:
-            if item in transaction.split(", "):
-                encoded_data.append(1)
-            else:
-                encoded_data.append(0)
-        binary_data.append(encoded_data)
-
-    try:
-        with open(destination_path, encoding="UTF-8", mode="w", newline="") as destination_file:
-            csv_writer = _csv.writer(destination_file)
-            csv_writer.writerow(items)
-            csv_writer.writerows(binary_data)
-    except FileNotFoundError:
-        with open(destination_path, encoding="UTF-8", mode="x") as destination_file:
-            pass
+# current_path = os.getcwd()  # O(1)
+# source_filepath = r"dataset\0002.csv"  # O(1)
+# destination_filepath = r"bin_dataset\new_binary_data.csv"
+#
+# source = os.path.join(current_path, source_filepath)  # O(1)
+# destination = os.path.join(current_path, destination_filepath)
+#
+#
+# def dig_items_from_(source_path, destination_path):
+#     items = []
+#     transactions = []
+#     binary_data = []
+#
+#     with open(source_path, encoding="UTF-8") as source_file:
+#         csv_reader = _csv.reader(source_file)  # O(1)
+#         for index, transaction in list(csv_reader)[1:]:  # O(n)
+#             transactions.append(transaction)
+#             for item in transaction.split(", "):  # O(m)
+#                 if item not in items:
+#                     items.append(item)
+#
+#     for transaction in transactions:
+#         encoded_data = []
+#         for item in items:
+#             if item in transaction.split(", "):
+#                 encoded_data.append(1)
+#             else:
+#                 encoded_data.append(0)
+#         binary_data.append(encoded_data)
+#
+#     try:
+#         with open(destination_path, encoding="UTF-8", mode="w", newline="") as destination_file:
+#             csv_writer = _csv.writer(destination_file)
+#             csv_writer.writerow(items)
+#             csv_writer.writerows(binary_data)
+#     except FileNotFoundError:
+#         with open(destination_path, encoding="UTF-8", mode="x") as destination_file:
+#             pass
 
 
 def item_joining(items_before_join, items_pruned):  # Complexity Algorithm :: O(mn)
@@ -280,3 +280,13 @@ class Apriori:
         print(f"Jumlah data yang bernilai di atas minimum confidence :: {len(self.items_which_above_confidence_value)}")
         print(f"Jumlah data yang valid :: {len(self.items_which_above_lift_ratio)}")
         print()
+
+
+if __name__ == '__main__':
+    filepath = r"C:\Users\62853\PycharmProjects\apriori_lab\bin_dataset\new_binary_data.csv"
+    apriori = Apriori(filepath=filepath, min_support=0.1, min_confidence=0.9)
+
+    apriori.start_now()
+
+    apriori.get_description_result()
+    apriori.get_summary()
