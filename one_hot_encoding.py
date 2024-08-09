@@ -15,11 +15,14 @@ class OneHotEncoding:
 
         with open(self.source, encoding="UTF-8") as source_file:
             csv_reader = _csv.reader(source_file)  # O(1)
-            for index, transaction in list(csv_reader)[1:]:  # O(n)
-                transactions.append(transaction)
-                for item in transaction.split(", "):  # O(m)
-                    if item not in items:
-                        items.append(item)
+            try:
+                for index, transaction in list(csv_reader)[1:]:  # O(n)
+                    transactions.append(transaction)
+                    for item in transaction.split(", "):  # O(m)
+                        if item not in items:
+                            items.append(item)
+            except ValueError:
+                print("Belum Bisa")
 
         for transaction in transactions:
             encoded_data = []
