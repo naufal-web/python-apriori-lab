@@ -7,4 +7,4 @@ lab_1.py
 lab_2.py
 __init__.py
 results
-implementation/through_web/temp
+implementation/through_web/temp/*.csv
