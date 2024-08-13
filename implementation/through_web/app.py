@@ -6,7 +6,10 @@ import os
 app = Flask(__name__)
 
 app.config["MAX_CONTENT_LENGTH"] = 16 * 1024 * 1024
-app.config["UPLOAD_FOLDER"] = r"C:\Users\62853\PycharmProjects\apriori_lab\implementation\through_web\temp"
+try:
+    app.config["UPLOAD_FOLDER"] = r"C:\Users\62853\PycharmProjects\apriori_lab\implementation\through_web\temp"
+except FileNotFoundError:
+    app.config["UPLOAD_FOLDER"] = os.path.join(os.getcwd(), r"\implementation\through_web\temp")
 
 
 CSV_EXTENSIONS = {"csv"}
