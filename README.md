@@ -4,6 +4,8 @@
 
 Dibuat oleh Naufal Maulana Malik
 
+Dibimbing oleh Dr. Widodo, S.Kom., M.Kom. dan Murien Nugraheni, S.T., M.Cs.
+
 S1 Pendidikan Teknik Informatika dan Komputer Universitas Negeri Jakarta 2024
 
 ## Deskripsi Modul
@@ -12,7 +14,7 @@ Python Apriori Lab adalah modul Apriori yang dibuat untuk menghasilkan data beru
 jalur berkas (_filepath_), nilai dukungan minimum (_minimum support value_), dan nilai kepastian minimum (_minimum 
 confidence value_).
 
-## Syarat Masukan Jalur Berkas (_filepath_)
+## Syarat Penggunaan Modul
 
 1. Nama _file_ yang digunakan umumnya berekstensi .csv dan berawal dari direktori akar seperti _C:\asal_direktori_ dan 
 sejenisnya.
@@ -24,7 +26,7 @@ sejenisnya.
 2. Isian _file_ yang digunakan umumnya berisi label berupa berbagai nama produk atau barang dan di bawah label tersebut 
 berisi berbagai data berupa bilangan biner (0 dan 1). 
 
-## Cara Menggunakan Modul
+## Prosedur Penggunaan Modul
     
  ```python3
 from apriori import Apriori
@@ -65,7 +67,7 @@ Min-confidence : 90 persen
 Iterasi        : 3 kali
 ```
 
-## Simpulan
+## Simpulan Penggunaan Modul
 
 Python Apriori Lab adalah modul Apriori yang sangat mudah digunakan dalam berbagai kasus, seperti _market basket analysis_
 dan seterusnya.

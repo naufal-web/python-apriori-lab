@@ -1,7 +1,9 @@
 .venv
 .idea
-bin_dataset
+bin_dataset/day_1_binary.csv
+bin_dataset/new_binary_data.csv
 dataset
 lab_1.py
 lab_2.py
 __init__.py
+results
