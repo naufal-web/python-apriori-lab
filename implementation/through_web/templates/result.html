@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+   <title> Python Apriori Lab | Lab Apriori Terkini </title>
+</head>
+<body>
+
+<h1> Python Apriori Lab | Ahlinya Analisis Data </h1>
+
+<h2> Hasil Penggalian Data </h2>
+
+{% for result in results %}
+   {% for key, value in result.items() %}
+      <p> {{ key }} ::: {{ value }} </p>
+   {% endfor %}
+{% endfor %}
+
+<h4></h4>
+
+</body>
+</html>
