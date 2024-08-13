@@ -18,6 +18,12 @@ def allowed_filename(file_name: str):
 
 @app.route('/')
 def home():
+    if len(os.listdir(app.config['UPLOAD_FOLDER'])) > 0:
+        for file in os.listdir(app.config['UPLOAD_FOLDER']):
+            try:
+                os.remove(file)
+            except FileNotFoundError:
+                os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
     return render_template("file_upload.html")
 
 
