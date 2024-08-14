@@ -1,6 +1,9 @@
 # import os
 import _csv
 
+import csv
+
+
 # current_path = os.getcwd()  # O(1)
 # source_filepath = r"dataset\0002.csv"  # O(1)
 # destination_filepath = r"bin_dataset\new_binary_data.csv"
@@ -128,6 +131,13 @@ def initial_generator(items_joined, initial):
     return initial
 
 
+def check_delimiter(filename):
+    sniffer = csv.Sniffer()
+    with open(filename) as fp:
+        delimiter = sniffer.sniff(fp.read(1000000000)).delimiter
+    return delimiter
+
+
 class Apriori:
 
     def __init__(self, filepath, min_support, min_confidence):
@@ -145,18 +155,29 @@ class Apriori:
         self.iteration = 0
 
         with open(self.filepath, encoding="UTF-8") as source_file:    # O(1)
-            csv_reader = _csv.reader(source_file)                       # O(1)
-            self.items = list(csv_reader)[0]                            # O(n)
-
-        # O(n)
+            if check_delimiter(self.filepath) == ",":
+                csv_reader = csv.reader(source_file)        # O(1)
+                self.items = list(csv_reader)[0]   # O(n)
+            else:
+                csv_reader = csv.reader(source_file, delimiter=check_delimiter(self.filepath))  # O(1)
+                self.items = list(csv_reader)[0]  # O(n)
 
         with open(self.filepath, encoding="UTF-8") as source_file:  # O(1)
-            csv_reader = _csv.reader(source_file)                       # O(1)
-            for row in list(csv_reader)[1:]:                            # O(m)
-                integers = []                                               # O(1)
-                for binary in row:                                          # O(n)
-                    integers.append(int(binary))                                # O(1)
-                self.rows.append(integers)                                  # O(1)
+            if check_delimiter(self.filepath) == ",":
+                csv_reader = csv.reader(source_file)
+                for row in list(csv_reader)[1:]:                            # O(m)
+                    integers = []         # O(1)
+                    for binary in row:  # O(n)
+                        integers.append(int(binary))  # O(1)
+                    self.rows.append(integers)        # O(1)
+            else:
+                csv_reader = csv.reader(source_file, delimiter=check_delimiter(self.filepath))
+                for row in list(csv_reader)[1:]:  # O(m)
+                    integers = []  # O(1)
+                    for binary in row:  # O(n)
+                        integers.append(int(binary))  # O(1)
+                    self.rows.append(integers)  # O(1)
+
 
         # O(1+m(2+n)) >>> O(1+2m+mn) >>> O(mn)
 
