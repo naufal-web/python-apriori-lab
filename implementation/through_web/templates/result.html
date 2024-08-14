@@ -2,21 +2,104 @@
 <html>
 <head>
    <title> Python Apriori Lab | Lab Apriori Terkini </title>
+   <style>
+      table, th, td {
+         border: 1px solid black;
+      }
+
+      body {
+         padding-bottom: 10px;
+      }
+
+      .inline-block {
+         display: inline-block;
+         position: relative;
+         top: 0;
+         left: 3px;
+         margin: 0 10px 0 0;
+         overflow: hidden;
+         float: left;
+      }
+
+      .inline {
+         display: inline;
+         position: relative;
+         top: 0;
+         margin: 0 10px 0 0;
+         overflow: hidden;
+      }
+
+      body {
+         width: 150%;
+         padding-bottom: 100px;
+      }
+
+      .block {
+         display: block;
+      }
+   </style>
 </head>
 <body>
 
-<h1> Python Apriori Lab | Ahlinya Analisis Data </h1>
+   <h1> Python Apriori Lab | Ahlinya Analisis Data </h1>
 
-<h2> Hasil Penggalian Data </h2>
+   <h2> Hasil Penggalian Data </h2>
 
-{% for result in results %}
-   {% for key, value in result.items() %}
-      <p> {{ key }} ::: {{ value }} </p>
-   {% endfor %}
-   <span> =================================== </span>
-{% endfor %}
+   <div class="result">
+      <div class="inline-block">
+         <table>
+            <tr>
+               <th> No. </th>
+               <th> Nama Produk </th>
+               <th> Nilai Dukung </th>
+            </tr>
+            {% for key, value in results[0].items() %}
+               <tr>
+                  <td> {{ loop.index }} </td>
+                  <td> {{ key }} </td>
+                  <td> {{ (value * 100)|int }} persen </td>
+               </tr>
+            {% endfor %}
+         </table>
+      </div>
 
-<h4></h4>
+      <div class="inline-block">
+         <table>
+            <tr>
+               <th> No. </th>
+               <th> Nama Produk </th>
+               <th> Nilai Kepastian </th>
+            </tr>
+            {% for key, value in results[1].items() %}
+               <tr>
+                  <td> {{ loop.index }} </td>
+                  <td> {{ key }} </td>
+                  <td> {{ (value * 100)|int }} persen </td>
+               </tr>
+            {% endfor %}
+         </table>
+      </div>
+
+      <div class="inline-block">
+         <table>
+            <tr>
+               <th> No. </th>
+               <th> Nama Produk </th>
+               <th> Rasio Angkat </th>
+            </tr>
+            {% for key, value in results[2].items() %}
+               <tr>
+                  <td> {{ loop.index }} </td>
+                  <td> {{ key }} </td>
+                  <td> {{ (value * 100)|int }} persen </td>
+               </tr>
+            {% endfor %}
+         </table>
+      </div>
+
+   </div>
+
+
 
 </body>
 </html>
