@@ -42,14 +42,14 @@
 
    <h1> Python Apriori Lab | Ahlinya Analisis Data </h1>
 
-   <h2> Hasil Penggalian Data </h2>
+   <h2> Hasil Penggalian Data dengan minimum support {{ (minimum_support * 100)|int }} persen dan minimum confidence {{ (minimum_confidence * 100)|int }} persen </h2>
 
    <div class="result">
       <div class="inline-block">
          <table>
             <tr>
                <th> No. </th>
-               <th> Nama Produk </th>
+               <th> Himpunan Produk </th>
                <th> Nilai Dukung </th>
             </tr>
             {% for key, value in results[0].items() %}
@@ -66,7 +66,7 @@
          <table>
             <tr>
                <th> No. </th>
-               <th> Nama Produk </th>
+               <th> Himpunan Produk </th>
                <th> Nilai Kepastian </th>
             </tr>
             {% for key, value in results[1].items() %}
@@ -83,7 +83,7 @@
          <table>
             <tr>
                <th> No. </th>
-               <th> Nama Produk </th>
+               <th> Himpunan Produk </th>
                <th> Rasio Angkat </th>
             </tr>
             {% for key, value in results[2].items() %}

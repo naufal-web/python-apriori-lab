@@ -19,6 +19,31 @@ def allowed_filename(file_name: str):
     return "." in file_name and file_name.rsplit(".", 1)[1].lower() in CSV_EXTENSIONS
 
 
+def slicing_dictionary(dct: dict, index: int):
+    copy = dct.copy()
+    copy.clear()
+
+    for index, (key, value) in zip(range(index), dct.items()):
+        copy[key] = value
+
+    dct.clear()
+    dct = copy
+
+    return dct
+
+
+def descending_dictionary_value(dct: dict):
+    return dict(sorted(dct.items(), key=lambda item: item[1], reverse=True))
+
+
+def ascending_dictionary_value(dct: dict):
+    sorted_dict = {}
+    for key in sorted(dct, key=dct.get):
+        sorted_dict[key] = dct[key]
+
+    return dct
+
+
 @app.route('/')
 def home():
     if len(os.listdir(app.config['UPLOAD_FOLDER'])) > 0:
@@ -47,6 +72,8 @@ def upload_files():
 
                     min_sup = round(int(request.form["minimum_support"]) / 100, 4)
                     min_confidence = round(int(request.form["minimum_confidence"]) / 100, 4)
+                    max_columns = int(request.form["maximum_columns"])
+                    sorting_option = request.form["option"]
                     apriori = Apriori(filepath=storage_path, min_support=min_sup, min_confidence=min_confidence)
                     apriori.start_now()
 
@@ -54,9 +81,23 @@ def upload_files():
                     confidence_items = apriori.items_which_above_confidence_value
                     validated_items = apriori.items_which_above_lift_ratio
 
+                    supportive_items = slicing_dictionary(supportive_items, max_columns)
+                    confidence_items = slicing_dictionary(confidence_items, max_columns)
+                    validated_items = slicing_dictionary(validated_items, max_columns)
+
+                    if sorting_option == "True":
+                        supportive_items = descending_dictionary_value(supportive_items)
+                        confidence_items = descending_dictionary_value(confidence_items)
+                        validated_items = descending_dictionary_value(validated_items)
+                    else:
+                        supportive_items = ascending_dictionary_value(supportive_items)
+                        confidence_items = ascending_dictionary_value(confidence_items)
+                        validated_items = ascending_dictionary_value(validated_items)
+
                     encapsulated_result = (supportive_items, confidence_items, validated_items)
 
-                    return render_template("result.html", results=encapsulated_result)
+                    return render_template("result.html", results=encapsulated_result,
+                                           minimum_support=min_sup, minimum_confidence=min_confidence)
                 except ModuleNotFoundError:
                     return "Olah Data Belum Bisa"
 
