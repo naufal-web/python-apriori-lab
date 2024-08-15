@@ -10,3 +10,4 @@ results
 implementation/through_web/temp/*.csv
 bin_dataset/new_binary_data_1.csv
 implementation/through_web/templates/file_upload.html
+implementation/through_web/templates/result_for_data_transforming.html
