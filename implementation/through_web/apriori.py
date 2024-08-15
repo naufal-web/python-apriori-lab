@@ -65,10 +65,10 @@ def item_pruning(items_before_join):  # Complexity Algorithm :: O(m*n)
 
     items_pruned = []  # O(1)
 
-    for item_before_join in items_before_join:     # O(n)
-        for item in item_before_join.split(", "):   # O(k)
-            if item not in items_pruned:                # O(1)
-                items_pruned.append(item)                   # O(1)
+    for item_before_join in items_before_join:  # O(n)
+        for item in item_before_join.split(", "):  # O(k)
+            if item not in items_pruned:  # O(1)
+                items_pruned.append(item)  # O(1)
 
     return items_pruned  # O(mn^2)
 
@@ -80,12 +80,12 @@ def item_selecting_with_minimum_support(count_of_data, items_by_number, minimum_
 
     iteration -= 1  # O(1)
 
-    for key, value in items_by_number.items():                          # O(n)
-        support_value = round(value / count_of_data, 3)                     # O(1)
-        if support_value >= minimum_support:                                # O(1)
-            if key.count(", ") == iteration:                                    # O(1)
-                items_before_joining.append(key)                                    # O(1)
-                items_which_above_minimum_support[key] = support_value              # O(1)
+    for key, value in items_by_number.items():  # O(n)
+        support_value = round(value / count_of_data, 3)  # O(1)
+        if support_value >= minimum_support:  # O(1)
+            if key.count(", ") == iteration:  # O(1)
+                items_before_joining.append(key)  # O(1)
+                items_which_above_minimum_support[key] = support_value  # O(1)
 
     # O(n), O(n)
 
@@ -98,11 +98,11 @@ def items_counting(initial):  # Complexity Algorithm :: O(n^2)
 
     # Complexity Algorithm :: O(n(2+n)) >> O(2n+n^2) >> O(n^2) or O(2n)
     for key, value in initial.items():  # O(n)
-        count = 0                           # O(1)
-        for val in value:                   # O(n)
-            if val == 1:                        # O(1)
+        count = 0  # O(1)
+        for val in value:  # O(n)
+            if val == 1:  # O(1)
                 count += 1
-        items_by_number[key] = count        # O(1)
+        items_by_number[key] = count  # O(1)
 
     return items_by_number
 
@@ -145,19 +145,19 @@ class Apriori:
         self.items_which_above_confidence_value = {}
         self.items_which_above_lift_ratio = {}
         self.items_dictionary = {}
-        self.filepath = filepath                          # O(1)
-        self.minimum_support = min_support                # O(1)
-        self.minimum_confidence = min_confidence          # O(1)
-        self.rows = []                                    # O(1)
-        self.items = None                                 # O(1)
+        self.filepath = filepath  # O(1)
+        self.minimum_support = min_support  # O(1)
+        self.minimum_confidence = min_confidence  # O(1)
+        self.rows = []  # O(1)
+        self.items = None  # O(1)
         self.items_by_number = {}
         self.initial = {}
         self.iteration = 0
 
-        with open(self.filepath, encoding="UTF-8") as source_file:    # O(1)
+        with open(self.filepath, encoding="UTF-8") as source_file:  # O(1)
             if check_delimiter(self.filepath) == ",":
-                csv_reader = csv.reader(source_file)        # O(1)
-                self.items = list(csv_reader)[0]   # O(n)
+                csv_reader = csv.reader(source_file)  # O(1)
+                self.items = list(csv_reader)[0]  # O(n)
             else:
                 csv_reader = csv.reader(source_file, delimiter=check_delimiter(self.filepath))  # O(1)
                 self.items = list(csv_reader)[0]  # O(n)
@@ -165,11 +165,11 @@ class Apriori:
         with open(self.filepath, encoding="UTF-8") as source_file:  # O(1)
             if check_delimiter(self.filepath) == ",":
                 csv_reader = csv.reader(source_file)
-                for row in list(csv_reader)[1:]:                            # O(m)
-                    integers = []         # O(1)
+                for row in list(csv_reader)[1:]:  # O(m)
+                    integers = []  # O(1)
                     for binary in row:  # O(n)
                         integers.append(int(binary))  # O(1)
-                    self.rows.append(integers)        # O(1)
+                    self.rows.append(integers)  # O(1)
             else:
                 csv_reader = csv.reader(source_file, delimiter=check_delimiter(self.filepath))
                 for row in list(csv_reader)[1:]:  # O(m)
@@ -178,22 +178,21 @@ class Apriori:
                         integers.append(int(binary))  # O(1)
                     self.rows.append(integers)  # O(1)
 
-
         # O(1+m(2+n)) >>> O(1+2m+mn) >>> O(mn)
 
     def start_now(self, maximum_iteration=10):
 
-        self.initial = {}                             # O(1)
-        for i in range(len(self.items)):              # O(n)
-            lst = []                                    # O(1)
-            for row in self.rows:                       # O(mn)
-                lst.append(row[i])                          # O(1)
+        self.initial = {}  # O(1)
+        for i in range(len(self.items)):  # O(n)
+            lst = []  # O(1)
+            for row in self.rows:  # O(mn)
+                lst.append(row[i])  # O(1)
 
-            self.initial[self.items[i]] = lst         # O(1)
+            self.initial[self.items[i]] = lst  # O(1)
 
         # O(2 + n(1+mn)) >>> O(2 + n + mn^2) >>> O(mn^2)
 
-        nested_dict = []   # O(1)
+        nested_dict = []  # O(1)
 
         it = 1
 
@@ -218,12 +217,12 @@ class Apriori:
         it = 2  # O(1)
         apriori = True
         # O(n log n)
-        while apriori:   # k = ???
+        while apriori:  # k = ???
             self.items_by_number = items_counting(self.initial)  # O(n^2)
             output = item_selecting_with_minimum_support(len(self.rows), self.items_by_number, self.minimum_support, it)
             items_selected, self.items_dictionary = output  # O(n)
             items_pruned = item_pruning(items_selected)  # O(n/2)
-            nested_dict.append(self.items_dictionary)       # O(n/2)
+            nested_dict.append(self.items_dictionary)  # O(n/2)
             items_joined = item_joining(items_selected, items_pruned)  # O(n^2/2)
             self.initial = initial_generator(items_joined, self.initial)  # O(n^(k+2)/2)
             if len(items_selected) != 0 and len(items_pruned) != 0 and it <= maximum_iteration:

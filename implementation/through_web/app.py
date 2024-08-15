@@ -29,6 +29,25 @@ def slicing_dictionary(dct: dict, index: int):
     dct.clear()
     dct = copy
 
+    new_dct = {}
+    support_values = set()
+    for value in dct.values():
+        support_values.add(value)
+        new_dct[value] = []
+
+    for key, value in dct.items():
+        if value in support_values:
+            new_dct[value].append(key)
+
+    for key, value in new_dct.items():
+        temporary_list = sorted(value)
+        new_dct[key] = temporary_list
+
+    dct.clear()
+    for key, values in new_dct.items():
+        for value in values:
+            dct[value] = key
+
     return dct
 
 
@@ -94,6 +113,8 @@ def transform_files():
                     supportive_items = ascending_dictionary_value(supportive_items)
                     confidence_items = ascending_dictionary_value(confidence_items)
                     validated_items = ascending_dictionary_value(validated_items)
+                else:
+                    pass
 
                 supportive_items = slicing_dictionary(supportive_items, max_columns)
                 confidence_items = slicing_dictionary(confidence_items, max_columns)
