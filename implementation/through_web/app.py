@@ -41,7 +41,7 @@ def ascending_dictionary_value(dct: dict):
     for key in sorted(dct, key=dct.get):
         sorted_dict[key] = dct[key]
 
-    return dct
+    return sorted_dict
 
 
 @app.route('/')
@@ -52,7 +52,64 @@ def home():
                 os.remove(file)
             except FileNotFoundError:
                 os.remove(os.path.join(app.config["UPLOAD_FOLDER"], file))
-    return render_template("file_upload.html")
+    return render_template("etl_tools.html")
+
+
+@app.route('/transform_data', methods=['POST'])
+def transform_files():
+    if "file" in request.files:
+        file = request.files["file"]
+        if file and allowed_filename(file_name=file.filename):
+            filename = secure_filename(file.filename)
+            storage_path = os.path.join(app.config['UPLOAD_FOLDER'], filename)
+            retrieval_path = os.path.join(app.config['UPLOAD_FOLDER'], "binary_data.csv")
+            try:
+                file.save(storage_path)
+            except Exception as e:
+                return f'Error saving file: {str(e)}', 500
+            else:
+                from one_hot_encoding import OneHotEncoding
+                from apriori import Apriori
+                file_encoding = OneHotEncoding(source=storage_path, destination=retrieval_path)
+                file_encoding.encode()
+
+                min_sup = round(int(request.form["minimum_support"]) / 100, 4)
+                min_confidence = round(int(request.form["minimum_confidence"]) / 100, 4)
+                max_columns = int(request.form["maximum_columns"])
+                sorting_option = request.form["option"]
+
+                apriori = Apriori(filepath=retrieval_path, min_support=min_sup, min_confidence=min_confidence)
+                apriori.start_now()
+
+                supportive_items = apriori.items_which_above_support_value
+                confidence_items = apriori.items_which_above_confidence_value
+                validated_items = apriori.items_which_above_lift_ratio
+
+                if sorting_option == "True":
+                    supportive_items = descending_dictionary_value(supportive_items)
+                    confidence_items = descending_dictionary_value(confidence_items)
+                    validated_items = descending_dictionary_value(validated_items)
+                elif sorting_option == "False":
+                    supportive_items = ascending_dictionary_value(supportive_items)
+                    confidence_items = ascending_dictionary_value(confidence_items)
+                    validated_items = ascending_dictionary_value(validated_items)
+
+                supportive_items = slicing_dictionary(supportive_items, max_columns)
+                confidence_items = slicing_dictionary(confidence_items, max_columns)
+                validated_items = slicing_dictionary(validated_items, max_columns)
+
+                encapsulated_result = (supportive_items, confidence_items, validated_items)
+
+                return render_template("result.html", results=encapsulated_result,
+                                       minimum_support=min_sup, minimum_confidence=min_confidence)
+
+        elif file and not allowed_filename(file_name=file.filename):
+            return "Unggah Berkas :: Tidak Cocok"
+        else:
+            return "Unggah Berkas :: Tidak Ada Berkas"
+    else:
+        return 'Unggah Berkas :: Belum Ada Berkas', 400
+
 
 
 @app.route('/upload', methods=['POST'])
@@ -81,18 +138,18 @@ def upload_files():
                     confidence_items = apriori.items_which_above_confidence_value
                     validated_items = apriori.items_which_above_lift_ratio
 
-                    supportive_items = slicing_dictionary(supportive_items, max_columns)
-                    confidence_items = slicing_dictionary(confidence_items, max_columns)
-                    validated_items = slicing_dictionary(validated_items, max_columns)
-
                     if sorting_option == "True":
                         supportive_items = descending_dictionary_value(supportive_items)
                         confidence_items = descending_dictionary_value(confidence_items)
                         validated_items = descending_dictionary_value(validated_items)
-                    else:
+                    elif sorting_option == "False":
                         supportive_items = ascending_dictionary_value(supportive_items)
                         confidence_items = ascending_dictionary_value(confidence_items)
                         validated_items = ascending_dictionary_value(validated_items)
+
+                    supportive_items = slicing_dictionary(supportive_items, max_columns)
+                    confidence_items = slicing_dictionary(confidence_items, max_columns)
+                    validated_items = slicing_dictionary(validated_items, max_columns)
 
                     encapsulated_result = (supportive_items, confidence_items, validated_items)
 
