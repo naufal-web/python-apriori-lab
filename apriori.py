@@ -1,46 +1,8 @@
 # import os
 import _csv
 
-# current_path = os.getcwd()  # O(1)
-# source_filepath = r"dataset\0002.csv"  # O(1)
-# destination_filepath = r"bin_dataset\new_binary_data.csv"
-#
-# source = os.path.join(current_path, source_filepath)  # O(1)
-# destination = os.path.join(current_path, destination_filepath)
-#
-#
-# def dig_items_from_(source_path, destination_path):
-#     items = []
-#     transactions = []
-#     binary_data = []
-#
-#     with open(source_path, encoding="UTF-8") as source_file:
-#         csv_reader = _csv.reader(source_file)  # O(1)
-#         for index, transaction in list(csv_reader)[1:]:  # O(n)
-#             transactions.append(transaction)
-#             for item in transaction.split(", "):  # O(m)
-#                 if item not in items:
-#                     items.append(item)
-#
-#     for transaction in transactions:
-#         encoded_data = []
-#         for item in items:
-#             if item in transaction.split(", "):
-#                 encoded_data.append(1)
-#             else:
-#                 encoded_data.append(0)
-#         binary_data.append(encoded_data)
-#
-#     try:
-#         with open(destination_path, encoding="UTF-8", mode="w", newline="") as destination_file:
-#             csv_writer = _csv.writer(destination_file)
-#             csv_writer.writerow(items)
-#             csv_writer.writerows(binary_data)
-#     except FileNotFoundError:
-#         with open(destination_path, encoding="UTF-8", mode="x") as destination_file:
-#             pass
 
-
+# Time Complexity :: O(mn)
 def item_joining(items_before_join, items_pruned):  # Complexity Algorithm :: O(mn)
     items_after_join = []  # O(1)
 
@@ -57,7 +19,7 @@ def item_joining(items_before_join, items_pruned):  # Complexity Algorithm :: O(
     return items_after_join
 
 
-# O(nk)
+# Time Complexity :: O(m*n^2)
 def item_pruning(items_before_join):  # Complexity Algorithm :: O(m*n)
 
     items_pruned = []  # O(1)
@@ -89,7 +51,7 @@ def item_selecting_with_minimum_support(count_of_data, items_by_number, minimum_
     return items_before_joining, items_which_above_minimum_support
 
 
-# O(n^2)
+# Time Complexity :: O(n^2)
 def items_counting(initial):  # Complexity Algorithm :: O(n^2)
     items_by_number = {}  # O(1)
 
@@ -104,7 +66,7 @@ def items_counting(initial):  # Complexity Algorithm :: O(n^2)
     return items_by_number
 
 
-# O(2n)
+# Time Complexity ::: O(n)
 def items_binary_list_generator(nested_list):  # Algorithm Complexity :: O(3n)
     binaries = []
     for i in range(min(map(len, nested_list))):  # O(n)
@@ -117,7 +79,7 @@ def items_binary_list_generator(nested_list):  # Algorithm Complexity :: O(3n)
     return binaries
 
 
-# O(n^2)
+# Time Complexity ::: O(n*m)
 def initial_generator(items_joined, initial):
     for item_joined in items_joined:  # O(n)
         lst = []  # O(1)
@@ -130,12 +92,12 @@ def initial_generator(items_joined, initial):
 
 class Apriori:
 
-    def __init__(self, filepath, min_support, min_confidence):
+    def __init__(self, path, min_support, min_confidence):
         self.items_which_above_support_value = {}
         self.items_which_above_confidence_value = {}
         self.items_which_above_lift_ratio = {}
         self.items_dictionary = {}
-        self.filepath = filepath                          # O(1)
+        self.filepath = path                          # O(1)
         self.minimum_support = min_support                # O(1)
         self.minimum_confidence = min_confidence          # O(1)
         self.rows = []                                    # O(1)
@@ -144,12 +106,12 @@ class Apriori:
         self.initial = {}
         self.iteration = 0
 
+        # Time Complexity O(1)
         with open(self.filepath, encoding="UTF-8") as source_file:    # O(1)
             csv_reader = _csv.reader(source_file)                       # O(1)
             self.items = list(csv_reader)[0]                            # O(n)
 
-        # O(n)
-
+        # Time Complexity O(m * n)
         with open(self.filepath, encoding="UTF-8") as source_file:  # O(1)
             csv_reader = _csv.reader(source_file)                       # O(1)
             for row in list(csv_reader)[1:]:                            # O(m)
@@ -158,78 +120,110 @@ class Apriori:
                     integers.append(int(binary))                                # O(1)
                 self.rows.append(integers)                                  # O(1)
 
-        # O(1+m(2+n)) >>> O(1+2m+mn) >>> O(mn)
+        # From Line 110 Into Line 121, The Time Complexity of LOC is O(m * n)
 
     def start_now(self, maximum_iteration=10):
 
-        self.initial = {}                             # O(1)
-        for i in range(len(self.items)):              # O(n)
-            lst = []                                    # O(1)
-            for row in self.rows:                       # O(mn)
-                lst.append(row[i])                          # O(1)
+        # Time Complexity :: O(m * n)
+        self.initial = {}
+        for i in range(len(self.items)):
+            lst = []
+            for row in self.rows:
+                lst.append(row[i])
 
-            self.initial[self.items[i]] = lst         # O(1)
+            self.initial[self.items[i]] = lst
 
-        # O(2 + n(1+mn)) >>> O(2 + n + mn^2) >>> O(mn^2)
+        # Time Complexity ::: O(1)
+        nested_dict = []
 
-        nested_dict = []   # O(1)
-
+        # Time Complexity ::: O(1)
         it = 1
 
-        # O(1)
+        # Time Complexity ::: O(1)
         print(f"Iterasi {it}")
 
-        # O(1)
-        self.items_by_number = items_counting(self.initial)  # O(mn^2) = O(1)
+        # Time Complexity ::: O(1)
+        self.items_by_number = items_counting(self.initial)  # O(n ^ 2)
 
-        # O(1)
+        # Time Complexity ::: O(n)
         output = item_selecting_with_minimum_support(len(self.rows), self.items_by_number, self.minimum_support, it)
-        items_selected, self.items_dictionary = output  # O(1)
 
+        # Time Complexity for output variable
+        # O(1) = O(1 + n^2 + 1 + 1)
+        # O(1) = O(3 + n^2)
+        # O(1) = O(n^2)
+        # O(n^2) = O(1)
+        # O(n) = O(1)
+
+        # Simplified Time Complexity
+        # O(n)
+        items_selected, self.items_dictionary = output
+
+        # Time Complexity ::: O(n)
         nested_dict.append(self.items_dictionary)  # O(1)
+
         print(f"Jumlah data yang memenuhi minimum support :: {len(items_selected)} data ")  # O(1)
         print()
-        items_joined = item_joining(items_selected, items_selected)  # O(n^2)
 
-        self.initial = initial_generator(items_joined, self.initial)  # O(n^2)
-        items_joined.clear()  # O(1)
+        # Time Complexity ::: O(n)
+        items_joined = item_joining(items_selected, items_selected)
 
-        it = 2  # O(1)
-        apriori = True
-        # O(n log n)
-        while apriori:   # k = ???
-            self.items_by_number = items_counting(self.initial)  # O(n^2)
+        # Time Complexity ::: O(m * n)
+        self.initial = initial_generator(items_joined, self.initial)
+
+        # Time Complexity ::: O(1)
+        items_joined.clear()
+
+        # Time Complexity ::: O(1)
+        it = 2
+
+        # Time Complexity ::: O(1)
+        ignite_apriori = True
+
+        # Time Complexity ::: O(n^(n log m))
+        while ignite_apriori:
+            # Time Complexity ::: O(n^2)
+            self.items_by_number = items_counting(self.initial)
+
+            # Time Complexity ::: O(n)
             output = item_selecting_with_minimum_support(len(self.rows), self.items_by_number, self.minimum_support, it)
-            items_selected, self.items_dictionary = output  # O(n)
-            items_pruned = item_pruning(items_selected)  # O(n/2)
-            nested_dict.append(self.items_dictionary)       # O(n/2)
-            items_joined = item_joining(items_selected, items_pruned)  # O(n^2/2)
-            self.initial = initial_generator(items_joined, self.initial)  # O(n^(k+2)/2)
+            items_selected, self.items_dictionary = output
+
+            # Time Complexity ::: O(mn^2)
+            items_pruned = item_pruning(items_selected)
+
+            # Time Complexity ::: O(n)
+            nested_dict.append(self.items_dictionary)
+
+            # Time Complexity ::: O(mn)
+            items_joined = item_joining(items_selected, items_pruned)
+
+            # Time Complexity ::: O(nm)
+            self.initial = initial_generator(items_joined, self.initial)
+
+            # Time Complexity ::: O(1)
             if len(items_selected) != 0 and len(items_pruned) != 0 and it <= maximum_iteration:
-                print(f"Iterasi {it}")  # O(1)
-                print(f"Jumlah data yang memenuhi minimum support :: {len(items_selected)} data ")  # O(1)
-                print(f"Jumlah kepingan data yang memenuhi minimum support :: {len(items_pruned)} data ")  # O(1)
-                apriori = True
+                print(f"Iterasi {it}")
+                print(f"Jumlah data yang memenuhi minimum support :: {len(items_selected)} data ")
+                print(f"Jumlah kepingan data yang memenuhi minimum support :: {len(items_pruned)} data ")
+                ignite_apriori = True
                 print()
             else:
-                apriori = False
+                ignite_apriori = False
                 self.iteration = it - 1
                 print("Apriori Selesai")
                 print(f"{self.iteration} kali iterasi")
 
+            # Time Complexity ::: O(1)
             it += 1
 
-        # (2 + n^2 + 3n + 3n + n + 2 + n^2 + 3n^3 + 1 + n^2 + 3)^k = 1
-        # (5 + 3n^3 + 2n^2 + 6n)^k = 1
-        # (3n^3 + 2n^2 + 6n)^k = 1
-        # (n(3n^2 + 2n + 6))^k = 1
-        # (n(3n 3)(n 2)))
-
+        # Time Complexity ::: O(n*m)
         self.items_which_above_support_value = {}
         for dct in nested_dict:
             for key, value in dct.items():
                 self.items_which_above_support_value[key] = value
 
+        # Time Complexity ::: O(n^2)
         self.items_which_above_confidence_value = {}
         for items_set, support_value in self.items_which_above_support_value.items():
             for i in range(items_set.count(", ")):
@@ -240,6 +234,7 @@ class Apriori:
                 if confidence_value >= self.minimum_confidence:
                     self.items_which_above_confidence_value[rules] = confidence_value
 
+        # Time Complexity ::: O(n)
         self.items_which_above_lift_ratio = {}
         for items_set, confidence_value in self.items_which_above_confidence_value.items():
             consequent = items_set.split(" ==> ")[1]
@@ -284,9 +279,17 @@ class Apriori:
 
 if __name__ == '__main__':
     filepath = r"C:\Users\62853\PycharmProjects\apriori_lab\bin_dataset\new_binary_data.csv"
-    apriori = Apriori(filepath=filepath, min_support=0.1, min_confidence=0.9)
 
+    # Time Complexity :: O(m * n)
+    apriori = Apriori(path=filepath, min_support=0.1, min_confidence=0.9)
+
+    # Time Complexity :: O(n^(log m base n))
     apriori.start_now()
 
+    # Time Complexity :: O(1)
     apriori.get_description_result()
+
+    # Time Complexity :: O(1)
     apriori.get_summary()
+
+    # Overall Time Complexity :: O(n^(log m base n))
